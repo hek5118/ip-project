@@ -75,7 +75,8 @@ export class LocationFromIP extends LitElement {
 
     const url = `https://maps.google.com/maps?q=${this.long},${this.lat}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
-    return html`<iframe title="Where you are" src="${url}"></iframe> `;
+    return html`<iframe title="Location" src="${url}"></iframe> 
+    <a href="$https://www.google.com/maps/@40.804,77.910,14z"><p style ="text-align:left">Location via Google Maps</a></p>`;
   }
 }
 
