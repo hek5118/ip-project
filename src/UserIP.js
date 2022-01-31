@@ -18,33 +18,30 @@ export class UserIP extends LitElement {
     super();
     // default values
     this.ip = null;
-    this.location = null;
     // variables can be stored on "this" as the class we're working on is like a
     // Java or other Object Oriented Programming Language
     // so for this one, we're storing a reference to the API endpoint
     // so that if it ever changed it would be easier to update
-
-    this.ipLookUp = 'https://ip-fast.com/api/ip/?format=json&location=True';
+    this.ipLookUp = 'https://ip-fast.com/api/ip/?format=json&location=True'; // changed False to True so it finds location
   }
 
   // properties that you wish to use as data in HTML, CSS, and the updated life-cycle
   static get properties() {
     return {
       ip: { type: String, reflect: true },
-
-      // retrieving location stuff
-      country: { type: String, reflect: true },
-      city: { type: String, reflect: true },
-      location: { type: String, reflect: true },
+      city: { type: String, reflect: true }, // added this so the location is returned as well (city and country)
+      country: { type: String, reflect: true }, // ^^
     };
   }
 
   // updated fires every time a property defined above changes
   // this allows you to react to variables changing and use javascript to perform logic
   updated(changedProperties) {
+    // updates ip? maybe?
     // this is looping over an array of values that's keyed by property name == the old value
     // this is because you could always write this.whatever if "whatever" is the property name in question
     changedProperties.forEach((oldValue, propName) => {
+      // changes oldproperty value to updated version
       // see if the current property that we know changed, is called ip
       // also see if it has ANY value. We benefit from JS being lazy typed here because null
       // (our default value) will fail this test but ANY VALUE will pass it
@@ -57,6 +54,7 @@ export class UserIP extends LitElement {
         const evt = new CustomEvent('ip-changed', {
           // send the event up in the HTML document
           bubbles: true,
+          // i am not familiar with bubbles/cimposed/cancelable
           // move up out of custom tags (that have a shadowRoot) and regular HTML tags
           composed: true,
           // other developers / code is allowed to tell this event to STOP going up in the DOM
@@ -97,6 +95,7 @@ export class UserIP extends LitElement {
    * it'll run regardless since we're not doing other actions
    */
   async updateUserIP() {
+    // no idea what the async denotes and fuzzy on fetch in js
     return fetch(this.ipLookUp)
       .then(resp => {
         if (resp.ok) {
@@ -105,14 +104,10 @@ export class UserIP extends LitElement {
         return false;
       })
       .then(data => {
-        // this works for the location, but the map is not accurate??
         this.ip = data.ip;
-        this.city = data.city;
-        this.country = data.country;
-
-        // trying to output them in one line
-        // this.location = `${data.city}, ${data.country}`;
-
+        this.country = data.country; // added this... not sure how to do it a better/ shorter way than city and country separate
+        this.city = data.city; // added this as well ^^
+        this.location = `${this.city}, ${this.country}`;
         return data;
       });
   }
@@ -150,17 +145,13 @@ export class UserIP extends LitElement {
 
   // this serves very little purpose but at least we're rendering the info
   render() {
-    // im a little confused here, and im pretty sure I made some errors trying to get the location stuff to work correctly
     return html` <ul>
-      <li><strong class="ipaddress">IP address: </strong> ${this.ip}</li>
-      <li><strong class="country">Country: </strong> ${this.country}</li>
-      <li><strong class="city">City: </strong> ${this.city}</li>
-
-      <li><strong class="location">Location: </strong> ${this.location}</li>
-
-      <li></li>
+      <li><strong class="ipaddress">IP address:</strong> ${this.ip}</li>
+      <li><strong class="ipaddress">Location:</strong> ${this.location}</li>
+      <li><strong class="ipaddress">Country:</strong> ${this.country}</li>
+      <li><strong class="ipaddress">City:</strong> ${this.city}</li>
     </ul>`;
-  }
+  } // added these two lines to return city and country but not sure if this is right
 }
 
 customElements.define(UserIP.tag, UserIP);

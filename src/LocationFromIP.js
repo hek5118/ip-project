@@ -16,7 +16,7 @@ export class LocationFromIP extends LitElement {
     this.lat = null; //changed to null
     this.city = null; //added
     this.country = null; //added
-    this.location = 'Map'; //?????
+    this.location = 'Map'; //maybe?????
   }
 
   // I'm not really sure what the "reflect" is doing other than its a boolean value
@@ -27,7 +27,7 @@ export class LocationFromIP extends LitElement {
       lat: { type: Number, reflect: true },
       city: { type: String, reflect: true}, //added
       country: {type: String, reflect: true}, //added
-      location: {type: String, reflect: true}
+      location: {type: String, reflect: true} //added
     };
   }
 
@@ -87,8 +87,12 @@ export class LocationFromIP extends LitElement {
     const url = `https://maps.google.com/maps?q=${this.long},${this.lat}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
     return html`<iframe title="Location" src="${url}"></iframe> 
-      <a href="$https://www.google.com/maps/@${this.lat},${this.long},14z"><p style ="text-align:left">Location via Google Maps</a></p>
+      <a href="https://www.google.com/maps/@${this.lat},${this.long},14z"><p style ="text-align:left">Location via Google Maps</a></p>
     
+      <script>window.__appCDN="https://cdn.webcomponents.psu.edu/cdn/";</script>
+      <script src="https://cdn.webcomponents.psu.edu/cdn/build.js"></script>
+      
+
       <wikipedia-query search="${this.city}"></wikipedia-query>
       <wikipedia-query search="${this.country}"></wikipedia-query>
       <wikipedia-query search="${this.location}"></wikipedia-query> `; //super unsure of this stuff
