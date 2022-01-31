@@ -1,6 +1,7 @@
 // dependencies / things imported
 import { LitElement, html, css } from 'lit';
 import { UserIP } from './UserIP.js';
+import '@lrnwebcomponents/wikipedia-query/wikipedia-query.js'; //added
 
 export class LocationFromIP extends LitElement {
   static get tag() {
@@ -11,8 +12,11 @@ export class LocationFromIP extends LitElement {
     super();
     this.UserIpInstance = new UserIP();
     this.locationEndpoint = 'https://freegeoip.app/json/';
-    this.long = 10.305385;
-    this.lat = 77.923029;
+    this.long = null;
+    this.lat = null; //changed to null
+    this.city = null; //added
+    this.country = null; //added
+    this.location = 'Map'; //?????
   }
 
   // I'm not really sure what the "reflect" is doing other than its a boolean value
@@ -21,6 +25,9 @@ export class LocationFromIP extends LitElement {
     return {
       long: { type: Number, reflect: true },
       lat: { type: Number, reflect: true },
+      city: { type: String, reflect: true}, //added
+      country: {type: String, reflect: true}, //added
+      location: {type: String, reflect: true}
     };
   }
 
@@ -50,6 +57,10 @@ export class LocationFromIP extends LitElement {
         // not entirely sure that this part is correct
         this.long = data.long;
         this.lat = data.lat;
+        this.city = data.city;
+        this.location = `${this.city}, ${this.country}`;
+        //do i console.log here?
+        console.log(`Location: ${this.location}`); //added but unsure
 
         return data;
       });
@@ -76,7 +87,11 @@ export class LocationFromIP extends LitElement {
     const url = `https://maps.google.com/maps?q=${this.long},${this.lat}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
     return html`<iframe title="Location" src="${url}"></iframe> 
-    <a href="$https://www.google.com/maps/@40.804,77.910,14z"><p style ="text-align:left">Location via Google Maps</a></p>`;
+      <a href="$https://www.google.com/maps/@${this.lat},${this.long},14z"><p style ="text-align:left">Location via Google Maps</a></p>
+    
+      <wikipedia-query search="${this.city}"></wikipedia-query>
+      <wikipedia-query search="${this.country}"></wikipedia-query>
+      <wikipedia-query search="${this.location}"></wikipedia-query> `; //super unsure of this stuff
   }
 }
 
