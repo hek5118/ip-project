@@ -13,10 +13,10 @@ export class LocationFromIP extends LitElement {
     this.UserIpInstance = new UserIP();
     this.locationEndpoint = 'https://freegeoip.app/json/';
     this.long = null;
-    this.lat = null; //changed to null
-    this.city = null; //added
-    this.region = null; //added
-    this.location = 'Map'; //maybe?????
+    this.lat = null; 
+    this.city = null; 
+    this.region = null; 
+    this.location = 'Map'; 
   }
 
 
@@ -49,14 +49,11 @@ export class LocationFromIP extends LitElement {
         return false;
       })
       .then(data => {
-        //console.log(data);
         this.long = data.longitude;
         this.lat = data.latitude;
         this.city = data.city;
         this.region = data.region;
-        //this.location = `${this.city}, ${this.region}`;
-        //do i console.log here?
-        console.log(data); //added but unsure
+        console.log(data); 
 
         return data;
       });

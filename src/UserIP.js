@@ -95,7 +95,6 @@ export class UserIP extends LitElement {
    * it'll run regardless since we're not doing other actions
    */
   async updateUserIP() {
-    // no idea what the async denotes and fuzzy on fetch in js
     return fetch(this.ipLookUp)
       .then(resp => {
         if (resp.ok) {
