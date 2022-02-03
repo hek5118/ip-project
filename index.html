@@ -63,6 +63,17 @@
     render(html`<button @click="${addIpTag}">Call the IP API</button>`, document.querySelector("#demo"));
   </script>
   <div id="demo"></div>
+  <br>
+
+  <label>Enter what you would like to search on NASA:</label>
+    <input type="text" id="answerBox"></input>
+    <br>
+
+    <select id="term" onchange="getNasaData();"></select>
+
+  
+
+
 </body>
 
 </html>
