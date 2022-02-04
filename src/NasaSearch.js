@@ -40,8 +40,12 @@ static get properties() {
 
    updateTerm(){
     //let term = document.querySelector("#term").value;
-    document.querySelector("#term").term = document.querySelector("#term").value;
-    //this.term = document.querySelector("#term").value;
+    //document.querySelector("#term").term = document.querySelector("#term").value;
+    //var form = document.forms[0];
+    // var selectElement = form.querySelector('input[name="term"]');
+    // var selectedValue = selectElement.value;
+    // return selectedValue;
+
 }
 
   async getNasaData() {
