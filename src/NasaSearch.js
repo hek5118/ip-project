@@ -22,7 +22,7 @@ static get properties() {
       if (propName === 'term' && this[propName]) {
         this.getNasaData();
       }
-      // when dates changes, fire an event for others to react to if they wish
+      
       else if (propName === 'nasaImages') {
         this.render();
       }
@@ -39,7 +39,9 @@ static get properties() {
   }
 
    updateTerm(){
-    let term = document.querySelector("#term").value;
+    //let term = document.querySelector("#term").value;
+    document.querySelector("#term").term = document.querySelector("#term").value;
+    //this.term = document.querySelector("#term").value;
 }
 
   async getNasaData() {

@@ -10,71 +10,40 @@
     html,
     body {
       margin: 0;
-      padding: 50px;
+      padding: 10px;
       font-family: sans-serif;
     }
-    hello-world {
-      border: 10px solid black;
+    nasa-image-search {
+      background-color: white;
     }
-    hello-world[name="cool"] {
-      color: orange;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    user-ip[ip="24.48.0.1"] {
-      background-color: orange;
+    nasa-image-search[load-data] {
+      background-color: lightblue;
+      transition: 1s ease-in-out background-color;
     }
   </style>
-  <title>Project one: </title>
+  <title>Lab 4/5</title>
 </head>
 
 <body>
-    <!-- 
-  <h1>Hello Worlds tags</h1>
-  <hello-world name="cool"></hello-world>
-  <hello-world name="Jeb"><p>Please clap..</p></hello-world>
-  <hello-world name="partner"></hello-world>
-  <script type="module">
-    import "./src/HelloWorld.js";
-  </script>
-  <h1>IP look up</h1>
-  <user-ip></user-ip>
-  <user-ip ip="24.48.0.1"></user-ip>
-  <script type="module">
-    // this makes user-ip web component work
-    import {UserIP} from "./src/UserIP.js";
-    // we make an instance of the class
-    const getIPClass = new UserIP();
-    // we wait 100ms and then we ask the class for the user's IP
-    setTimeout(async() => {
-      console.log(await getIPClass.updateUserIP());
-    }, 100);
-  </script>
-  <h1>Location based on IP address as a map</h1>
-  <location-from-ip></location-from-ip>
-  <script type="module">
-    import "./src/LocationFromIP.js";
-  </script>
-  <h1>Example event binding</h1>
-  <script type="module">
-    import {html, render} from "lit";
-    function addIpTag(e) {
-      const userIp = document.createElement("user-ip");
-      document.querySelector("#demo").appendChild(userIp);
-    }
-    render(html`<button @click="${addIpTag}">Call the IP API</button>`, document.querySelector("#demo"));
-  </script>
-  <div id="demo"></div>
-  <br>
--->
-
-  <label>Enter what you would like to search on NASA:</label>
+<h1>Nasa Image Search</h1>
+  <label>Enter what images you would like to search for on NASA:</label>
     <input type="text" id="term"></input>
+    <br>
     <br>
     <button onclick="updateTerm();">Submit</button>
     <br>
   
 
-<script src = "NasaSearch.js" defer></script>
-</body>
+  <script type="module"> import "./src/NasaSearch.js";
 
+   document.querySelector("nasa-image-search").addEventListener("results-changed", (e) => {
+      console.log(e.detail);
+      document.querySelector("#term").innerHTML = document.querySelector("#term").value;
+    });
+  
+  </script>
+  <br>
+  <nasa-image-search></nasa-image-search>
+
+  </body> 
 </html>
