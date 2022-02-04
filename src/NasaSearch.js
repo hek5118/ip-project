@@ -6,30 +6,26 @@ class NasaSearch extends LitElement {
 constructor() {
     super();
     this.nasaImages = []; //array
-    //this.locationEndpoint = 'https://images-api.nasa.gov/';
+    this.term = '';
 }
 
 
 static get properties() {
     return {
-      view: { type: String, reflect: true },
-      nasaImages: {
-        type: Array,
-      },
-      loadData: {
-        type: Boolean,
-        reflect: true,
-        attribute: 'load-data',
-      },
+      nasaImages: { type: Array},
+      term: {type: String, reflect: true},
     };
   }
 
   updated(changedProperties) {
     changedProperties.forEach((oldValue, propName) => {
-      if (propName === 'loadData' && this[propName]) {
+      if (propName === 'term' && this[propName]) {
         this.getNasaData();
       }
       // when dates changes, fire an event for others to react to if they wish
+      else if (propName === 'nasaImages') {
+        this.render();
+      }
       else if (propName === 'nasaImages') {
         this.dispatchEvent(
           new CustomEvent('results-changed', {
@@ -42,11 +38,13 @@ static get properties() {
     });
   }
 
+   updateTerm(){
+    let term = document.querySelector("#term").value;
+}
+
   async getNasaData() {
-      let term = document.querySelector("#term").value;
       return fetch(
-          //`https://images-api.nasa.gov/search?q=media_type=image`
-          `https://images-api.nasa.gov/search?${term}&page=1&media_type=image`
+          `https://images-api.nasa.gov/search?media_type=image&q=` + this.term //adding user term to the "q=" at the end tocreate the search
       )
       .then(resp => {
           if(resp.ok) {
@@ -55,27 +53,22 @@ static get properties() {
           return false;
       })
       .then(data => {
-          console.log(data);
+          //console.log(data);
           this.nasaImages = [];
 
-          data.collection.items.forEach(element => {
-              if(element.links[0].href != undefined) {
-                  const moonInfo = {
+          data.collection.items.forEach(element => { //trying out collections +forEach instead of for loop 
+              if(element.links[0].href !== undefined) {
+                  const simplifiedInfo = {
                       imagesrc: element.links[0].href,
                       title: element.data[0].title,
-                      description: element.data[0].description,
+                      description: element.data[0].description, //based off of  CourseDates? unsure
                   };
-                  console.log(moonInfo);
-                  this.nasaImages.push(moonInfo);
+                  //console.log(simplifiedInfo);
+                  this.nasaImages.push(simplifiedInfo);
               }
           });
           return data;
       });
-  }
-
-  resetData() {
-    this.nasaImages = [];
-    this.loadData = false;
   }
 
   static get styles() {
@@ -96,39 +89,20 @@ static get properties() {
 
   render() {
     return html`
-      ${this.view === 'list'
-        ? html`
-            <ul>
-              ${this.nasaImages.map(
-                item => html`
-                  <li>
-                    ${item.location} - ${item.month} - ${item.day} ${item.date}
-                    - ${item.name} - ${item.start} - ${item.end}
-                  </li>
-                `
-              )}
-            </ul>
-          `
-        : html`
-            ${this.nasaSearch.map(
-              item => html`
-                <date-card
-                  location="${item.location}"
-                  month="${item.month}"
-                  day="${item.day}"
-                  date="${item.date}"
-                  title="${item.name}"
-                  start-time="${item.start}"
-                  end-time="${item.end}"
-                ></date-card>
-              `
-            )}
-          `}
+      ${this.nasaImages.map(
+        item => html`
+          <accent-card imagesrc="${item.imagesrc}">
+            <div slot="heading">${item.title}</div>
+            <div slot="content">${item.description}</div>
+          </accent-card>
+        `
+      )}
     `;
   }
+}
 
 
 
 
 
-//customElements.define('nasa-image-search', NasaSearch);
+customElements.define('nasa-image-search', NasaSearch);

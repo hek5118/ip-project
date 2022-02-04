@@ -28,6 +28,7 @@
 </head>
 
 <body>
+    <!-- 
   <h1>Hello Worlds tags</h1>
   <hello-world name="cool"></hello-world>
   <hello-world name="Jeb"><p>Please clap..</p></hello-world>
@@ -64,16 +65,16 @@
   </script>
   <div id="demo"></div>
   <br>
+-->
 
   <label>Enter what you would like to search on NASA:</label>
-    <input type="text" id="answerBox"></input>
+    <input type="text" id="term"></input>
     <br>
-
-    <select id="term" onchange="getNasaData();"></select>
-
+    <button onclick="updateTerm();">Submit</button>
+    <br>
   
 
-
+<script src = "NasaSearch.js" defer></script>
 </body>
 
 </html>
