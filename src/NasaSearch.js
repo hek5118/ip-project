@@ -2,18 +2,18 @@ import { LitElement, html, css } from 'lit';
 import '@lrnwebcomponents/accent-card';
 
 class NasaSearch extends LitElement {
-
-constructor() {
+  constructor() {
     super();
-    this.nasaImages = []; //array
+    this.NasaImages = [];
     this.term = '';
-}
+  }
 
-
-static get properties() {
+  static get properties() {
     return {
-      nasaImages: { type: Array},
-      term: {type: String, reflect: true},
+      term: { type: String, reflect: true },
+      NasaImages: {
+        type: Array,
+      },
     };
   }
 
@@ -21,16 +21,13 @@ static get properties() {
     changedProperties.forEach((oldValue, propName) => {
       if (propName === 'term' && this[propName]) {
         this.getNasaData();
-      }
-      
-      else if (propName === 'nasaImages') {
+      } else if (propName === 'NasaImages') {
         this.render();
-      }
-      else if (propName === 'nasaImages') {
+      } else if (propName === 'NasaImages') {
         this.dispatchEvent(
           new CustomEvent('results-changed', {
             detail: {
-              value: this.nasaImages,
+              value: this.NasaImages,
             },
           })
         );
@@ -38,42 +35,41 @@ static get properties() {
     });
   }
 
-   updateTerm(){
-    //let term = document.querySelector("#term").value;
-    //document.querySelector("#term").term = document.querySelector("#term").value;
-    //var form = document.forms[0];
-    // var selectElement = form.querySelector('input[name="term"]');
-    // var selectedValue = selectElement.value;
-    // return selectedValue;
-
-}
+  updateTerm(value) {
+    this.term = value;
+    this.getNasaData();
+  }
 
   async getNasaData() {
-      return fetch(
-          `https://images-api.nasa.gov/search?media_type=image&q=` + this.term //adding user term to the "q=" at the end tocreate the search
-      )
+    // let term = document.querySelector("term").value;
+    // document.querySelector("term").term = document.querySelector("term").value;
+    return fetch(
+      `https://images-api.nasa.gov/search?media_type=image&q=${this.term}`
+      // adding in the search term to the end of the url for updated search
+    )
       .then(resp => {
-          if(resp.ok) {
-              return resp.json();
-          }
-          return false;
+        if (resp.ok) {
+          return resp.json();
+        }
+        return false;
       })
       .then(data => {
-          //console.log(data);
-          this.nasaImages = [];
-
-          data.collection.items.forEach(element => { //trying out collections +forEach instead of for loop 
-              if(element.links[0].href !== undefined) {
-                  const simplifiedInfo = {
-                      imagesrc: element.links[0].href,
-                      title: element.data[0].title,
-                      description: element.data[0].description, //based off of  CourseDates? unsure
-                  };
-                  //console.log(simplifiedInfo);
-                  this.nasaImages.push(simplifiedInfo);
-              }
-          });
-          return data;
+        // console.log(data);
+        this.NasaImages = [];
+        // grabbed from coursedates.js
+        data.collection.items.forEach(element => {
+          // not sure why we need collections
+          if (element.links[0].href !== undefined) {
+            const simplifiedInfo = {
+              imagesrc: element.links[0].href,
+              title: element.data[0].title,
+              description: element.data[0].description,
+            };
+            // console.log(simplifiedInfo);
+            this.NasaImages.push(simplifiedInfo);
+          }
+        });
+        return data;
       });
   }
 
@@ -95,9 +91,9 @@ static get properties() {
 
   render() {
     return html`
-      ${this.nasaImages.map(
+      ${this.NasaImages.map(
         item => html`
-          <accent-card imagesrc="${item.imagesrc}">
+          <accent-card image-src="${item.imagesrc}">
             <div slot="heading">${item.title}</div>
             <div slot="content">${item.description}</div>
           </accent-card>
@@ -106,9 +102,4 @@ static get properties() {
     `;
   }
 }
-
-
-
-
-
 customElements.define('nasa-image-search', NasaSearch);
